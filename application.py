@@ -28,7 +28,7 @@ def health_check():
 @app.route('/')
 def home():
     data = pd.read_excel("data/Kampala & Wakiso.xlsx")
-    services_dict = joblib.load("./Data/services_dict.pkl")
+    services_dict = joblib.load("./data/services_dict.pkl")
     services = data['cleaned services'].values
     services_set = extract_elements(services, True)
     print(services_set)
