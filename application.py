@@ -31,7 +31,6 @@ def home():
     services_dict = joblib.load("./data/services_dict.pkl")
     services = data['cleaned services'].values
     services_set = extract_elements(services, True)
-    print(services_set)
 
     return render_template('home.html', services=services_set, services_dict=services_dict)
 

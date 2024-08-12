@@ -350,7 +350,10 @@ z-index: 1000; /* Puts the element on top of other elements */
                     // $('#successModal').modal('show');
                     // document.getElementById('spinner').style.display = 'none';
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    window.location.href = '{{url_for("view")}}';
+                    console.error('Error:', error)
+                });
 
 
                 },
