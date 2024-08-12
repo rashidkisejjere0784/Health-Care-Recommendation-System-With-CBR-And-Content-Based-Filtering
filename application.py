@@ -21,6 +21,10 @@ def extract_elements(elements : list, is_service = False) -> set:
     
     return sorted(set(elements_set))
 
+@app.route('/health_check', methods=['GET'])
+def health_check():
+    return jsonify({"status": "OK"}), 200
+
 @app.route('/')
 def home():
     data = pd.read_excel("data/Kampala & Wakiso.xlsx")
