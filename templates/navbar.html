@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    <script src="https://kit.fontawesome.com/67951f435c.js" crossorigin="anonymous"></script>
+
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.2/mdb.min.css"
+        rel="stylesheet"
+        />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+    <title>HealthCare Compass</title>
+    <style>
+        body {
+            background-color: #e9f5e9;
+        }
+        .navbar {
+            background-color: #4659d2 !important;
+        }
+        .navbar-brand, .nav-link, .navbar-toggler-icon {
+            color: white !important;
+        }
+        .nav-link:hover {
+            background-color: #3f78c9 !important;
+        }
+        .card {
+            background-color: #f8fff8;
+            border-color: #d4edda;
+        }
+
+
+.list-group-item {
+    background-color: #f8fff8;
+    border-color: #d4edda;
+    width: 15%;
+    display: inline-block;
+}
+
+.service-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 400px;
+    margin: 10px;
+    transition: transform 0.3s;
+    position: relative;
+    cursor: pointer;
+}
+
+.service-container:hover {
+    transform: translateY(-5px);
+}
+
+.service-img {
+    position: relative;
+    width: 50%;
+}
+
+.service-img img {
+    width: 100%;
+    border-radius: 10px 0 0 10px;
+}
+
+.service-description {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 0 0 10px 10px;
+}
+
+.service-container:hover .service-description {
+    opacity: 1;
+}
+
+.service-title {
+    padding-left: 20px;
+    width: 50%;
+}
+
+.service-title h2 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+
+.selected-services {
+    margin-top: 20px;
+}
+
+.selected-services .card {
+    border: none;
+}
+
+.selected-services h3 {
+    margin-bottom: 10px;
+}
+
+/* Focus styles */
+.breadcrumb-item a:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+}
+
+.spinner {
+top: 50%;
+left: 50%;
+z-index: 1000; /* Puts the element on top of other elements */
+  width: 40px;
+  height: 40px;
+  position: relative;
+  text-align: center;
+  z-index: 10;
+  display: none;
+  -webkit-animation: sk-rotate 2.0s infinite linear;
+  animation: sk-rotate 2.0s infinite linear;
+}
+
+.dot1, .dot2 {
+  width: 60%;
+  height: 60%;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  background-color: #4659d2;
+  border-radius: 100%;
+  
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.hospital-info{
+    margin-top: 5px;
+}
+
+.dot2 {
+  top: auto;
+  bottom: 0;
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+.filters {
+    display: flex;
+    gap: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.filter-item {
+    flex: 1;
+}
+
+.filter-item.col-2 {
+    flex: 0 0 150px;
+}
+
+.filter-item label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.filter-item select,
+.filter-item input[type="radio"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.rating-options {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.rating-options label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+#apply-filters {
+    width: 100%;
+    padding: 10px;
+    background-color: #4659d2;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#apply-filters:hover {
+    background-color: #4659d2;
+}
+
+.hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover:hover {
+    transform: scale(1.05); /* Slightly scale up the element */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Add a box shadow */
+}
+
+
+@-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
+@keyframes sk-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">HealthCare Compass</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('about') }}">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">Contribute</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-light" href="">Login</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+</body>
+<script>
+    const selectedServices = [];
+
+    function selectService(element) {
+        const service = element.querySelector('.service-title h2');
+
+        if (selectedServices.includes(service.textContent)) {
+            // Remove from selected services
+            element.style.backgroundColor = "white"
+            const index = selectedServices.indexOf(service.textContent);
+            if (index > -1) {
+                selectedServices.splice(index, 1);
+            }
+            element.classList.remove('selected');
+        } else {
+            // Add to selected services
+            element.style.backgroundColor = "#6198e5"
+            selectedServices.push(service.textContent);
+            element.classList.add('selected');
+        }
+
+        updateSelectedServices();
+    }
+
+    function updateSelectedServices() {
+        const selectedServicesContainer = document.querySelector('.selected-services');
+        selectedServicesContainer.innerHTML = `
+            <div class="p-2 w-100">
+                <h3>Selected Services:</h3>
+                <div class="d-flex align-center" id="selected-services">
+                        ${selectedServices.map(service => `<span class="list-group-item m-2">${service}</span>`).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    function getRecommendation(){
+        const selectedServices = Array.from(document.getElementById('selected-services').children).map(li => li.innerText);
+        if (navigator.geolocation) {
+            document.getElementById('spinner').style.display = 'block';
+            // Get the user's current position
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                // Get the latitude and longitude coordinates
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+
+                fetch('/get_recommendations', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                        'services': selectedServices,
+                        'latitude': latitude,
+                        'longitude': longitude,
+                        })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    if (data['response'] == true){
+                        window.location.href = '{{url_for("view")}}';
+                    }
+                    // displayData(data);
+                    // $('#successModal').modal('show');
+                    // document.getElementById('spinner').style.display = 'none';
+                })
+                .catch(error => console.error('Error:', error));
+
+
+                },
+                function(error) {
+                // Handle any errors
+                alert("Please Allow the Location");
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+        
+    }
+
+    function displayData(data) {
+        const hospitalIds = data['hospital_ids'];
+        const hospitalNames = data['hospital names'];
+        const ratings = data['rating'];
+        const careSystems = data['Care system'];
+        const services = data['services'];
+        const operatingTimes = data['operation_time'];
+        const locations = data['Location'];
+        const payments = data['Payment'];
+        const latitude = data['Latitude']
+        const longitude = data['Longitude']
+
+        const dataContainer = document.getElementById('hospitalDataContainer');
+        dataContainer.innerHTML = '';
+
+        for (var i = 0; i < Object.keys(hospitalIds).length; i++) {
+            let card = document.createElement('div');
+            card.className = 'hospital-card';
+
+            // Create stars based on rating value
+            let ratingStars = '';
+            const ratingValue = Math.round(Object.values(ratings)[i]);
+            for (let j = 0; j < 5; j++) {
+                if (j < ratingValue) {
+                    ratingStars += '<i class="fas fa-star"></i>';
+                } else {
+                    ratingStars += '<i class="far fa-star"></i>';
+                }
+            }
+
+            // Create operating time table
+            const operatingTimeArray = Object.values(operatingTimes)[i].split(',');
+            const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            let operatingTimeTable = '<table class="table table-sm"><thead><tr>';
+            daysOfWeek.forEach(day => operatingTimeTable += `<th>${day}</th>`);
+            operatingTimeTable += '</tr></thead><tbody><tr>';
+            operatingTimeArray.forEach(time => operatingTimeTable += `<td>${time}</td>`);
+            operatingTimeTable += '</tr></tbody></table>';
+
+            card.innerHTML = `
+                <div class="hospital-name font-weight-bold">${Object.values(hospitalNames)[i]} <a href="https://www.google.com/maps?q=${Object.values(latitude)[i]},${Object.values(longitude)[i]}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
+                <div class="hospital-info">
+                    ${Object.values(services)[i]}
+                </div>
+                <div class="hospital-info">
+                    <span class="hospital-rating">${ratingStars}</span>
+                    <span><i class="fas fa-map-marker-alt"></i> ${Object.values(locations)[i]}</span>
+                </div>
+                <div class="hospital-info">
+                    ${operatingTimeTable}
+                </div>
+                <div class="hospital-info">
+                    <strong>Payment Type:</strong> ${Object.values(payments)[i]}
+                </div>
+            `;
+
+            dataContainer.appendChild(card);
+        }
+    }
+
+</script>
+</html>

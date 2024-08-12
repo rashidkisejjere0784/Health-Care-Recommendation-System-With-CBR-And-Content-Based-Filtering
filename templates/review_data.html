@@ -1,0 +1,66 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+
+<div class="container">
+    {% if message %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+    
+    <h1 class="hospital-header inline-block">Review Data</h1>
+    
+    <div style="max-width: 150%; overflow: scroll;">
+        <table class="table table-striped overflow-scroll">
+            <thead>
+                <tr>
+                    <th>Hospital Name</th>
+                    <th>Rating</th>
+                    <th>Care System</th>
+                    <th>Coordinates</th>
+                    <th>Type</th>
+                    <th>Services</th>
+                    <th>Location</th>
+                    <th>Payment</th>
+                    <th>Phone</th>
+                    <th>Website link</th>
+                    <th>Hospital Id</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(hospitals | count) %}
+                    <tr>
+                        <td>{{hospitals[i]["Hospital Name"]}}</td>
+                        <td>{{hospitals[i]['rating']}}</td>
+                        <td>{{hospitals[i]['Care system']}}</td>
+                        <td>{{hospitals[i]['Cordinates']}}</td>
+                        <td>{{hospitals[i]['Type']}}</td>
+                        <td>{{hospitals[i]['Services']}}</td>
+                        <td>{{hospitals[i]['Location']}}</td>
+                        <td>{{hospitals[i]['Payment']}}</td>
+                        <td>{{hospitals[i]['phone']}}</td>
+                        <td>{{hospitals[i]['website']}}</td>
+                        <td>
+                            {{hospitals[i]['Hospital Id']}}
+                        </td>
+                        <td>
+                            <form action="{{ url_for('review_data') }}" method="post">
+                                <input type="hidden" name="hospital_id" value="{{i}}">
+                                <button type="submit" class="btn btn-success" name="Action" value = "approve">Approve</button>
+                                <button type="submit" class="btn btn-danger" name="Action" value = "decline">Decline</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+           
+</div>
+
+{% endblock %}

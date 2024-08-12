@@ -1,0 +1,70 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+
+<div class="container">
+    {% if authenticated == False %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        You must be logged in to view this page.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+  </div>
+    {% else %}
+            {% if message %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endif %}
+            
+            <h1 class="hospital-header inline-block">Hospital Data</h1>
+            <a href="{{ url_for('record_data') }}" class="btn btn-primary inline-block">Add</a>
+            {% if is_admin %}
+                <a href="{{ url_for('review_data') }}" class="btn btn-success inline-block">Review Contributions</a>
+            {% endif %}
+            <div style="max-width: 150%; overflow: scroll;">
+                <table class="table table-striped overflow-scroll">
+                    <thead>
+                        <tr>
+                            <th>Hospital Name</th>
+                            <th>Rating</th>
+                            <th>Care System</th>
+                            <th>Services</th>
+                            <th>Location</th>
+                            <th>Payment</th>
+                            <th>Phone</th>
+                            <th>Website link</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hospital in hospitals %}
+    
+                            <tr>
+                                <td>{{hospital["Hospital Name"]}}</td>
+                                <td>{{hospital['rating']}}</td>
+                                <td>{{hospital['Care system']}}</td>
+                                <td>{{hospital['Services']}}</td>
+                                <td>{{hospital['Location']}}</td>
+                                <td>{{hospital['Payment']}}</td>
+                                <td>{{hospital['phone']}}</td>
+                                <td>{{hospital['website']}}</td>
+                                <td>
+                                    <form action="{{ url_for('edit_hospital') }}" method="post">
+                                        <input type="hidden" name="hospital_id" value="{{hospital['Hospital Id'] - 1}}">
+                                        <button type="submit" class="btn btn-primary" name="delete">Edit</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+           
+    {% endif %}
+</div>
+
+{% endblock %}

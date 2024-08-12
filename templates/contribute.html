@@ -1,0 +1,24 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<div class="container m-5">
+    <div class="card p-10 m-10">
+        <div class="card-body">
+            <h5 class="card-title">Contribute</h5>
+            <form id="login-form" action="{{ url_for('login') }}" method="POST">
+                <div class="form-group">
+                    <label for="Email">Email</label>
+                    <input type="text" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p>Don't have an account ?, Create a <a href="{{ url_for('register')}}">new one</a></p>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

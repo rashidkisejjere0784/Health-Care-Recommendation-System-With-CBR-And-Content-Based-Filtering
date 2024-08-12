@@ -1,0 +1,79 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    {% if not authenticated %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        You must be logged in to view this page.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% else %}
+    <h2>Add Hospital</h2>
+        <form action="{{ url_for('add_hospital') }}" method="post" class="needs-validation" novalidate>
+            <div class="card" style="padding: 10px !important;">            
+            <div class="form-group">
+                <label for="hospitalName">Hospital Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="hospitalName" placeholder="Hospital Name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="rating">Rating</label>
+                <input type="number" class="form-control" name="rating" placeholder="rating">
+            </div>
+
+            <div class="form-group">
+                <label for="careSystem">Care System <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="careSystem"  placeholder="Care system" required>
+            </div>
+
+            <div class="form-group">
+                <label for="services">Services <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="services" placeholder="Services" required>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="location"  placeholder="Location" required>
+            </div>
+
+            <div class="form-group">
+                <label for="payment">Payment</label>
+                <input type="text" class="form-control" name="payment" placeholder="Payment">
+            </div>
+
+            <div class="form-group">
+                <label for="coordinates">Coordinates</label>
+                <input type="text" class="form-control" name="coordinates"  placeholder="Cordinates">
+            </div>
+
+            <div class="form-group">
+                <label for="operatingTime">Operating Time <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="operatingTime" placeholder="Operating Time" required>
+            </div>
+
+            <div class="form-group">
+                <label for="type">Type</label>
+                <input type="text" class="form-control" name="type"placeholder="Type">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" class="form-control" name="phone"  placeholder="phone">
+            </div>
+
+            <div class="form-group">
+                <label for="website">Website</label>
+                <input type="text" class="form-control" name="website" placeholder="website">
+            </div>
+
+            </div>
+            
+            <button type="submit" class="btn btn-primary mt-3">Update</button>
+        </form>
+    {% endif %}
+</div>
+
+{% endblock %}

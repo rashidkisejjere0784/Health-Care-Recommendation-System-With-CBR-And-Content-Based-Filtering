@@ -1,0 +1,104 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <h3>Recommended Health Care Facilities</h3>
+    <!-- Category Filter -->
+    <form method="post" action="/filter" class="filters row">
+        <div class="filter-item col">
+            <label for="category">Care System</label>
+            <select id="category" name="care-system">
+                {% if filter_args['care_system'] == 'Public'%}
+                   <option value="Public" selected>Public</option>
+                   <option value="all">All</option>
+                    <option value="Private">Private</option> 
+                {% elif filter_args['care_system'] == 'Private' %}
+                    <option value="Private" selected>Private</option>
+                    <option value="all">All</option>
+                    <option value="Public">Public</option>
+                {% else %}
+                    <option value="all" selected>All</option>
+                    <option value="Private">Private</option>
+                    <option value="Public">Public</option>
+                {% endif %}
+                
+            </select>
+        </div>
+    
+        <div class="filter-item col">
+            <label for="rating">Sort by rating :</label>
+            <div class="rating-options">
+                <label for="ascending d-block">
+                    {% if filter_args['sort_by'] and filter_args['sort_by'] == 'ascending'%}
+                        <input type="radio" id="ascending" name="sort-by" value="ascending" checked>    
+                    {% else %}
+                        <input type="radio" id="ascending" name="sort-by" value="ascending"> 
+                    {% endif %}
+                    
+                    Ascending
+                </label>
+                
+                <label for="descending d-block">
+                    {% if filter_args['sort_by'] and filter_args['sort_by'] == 'descending'%}
+                        <input type="radio" id="descending" name="sort-by" value="descending" checked>    
+                    {% else %}
+                        <input type="radio" id="descending" name="sort-by" value="descending">
+                    {% endif %}
+                    Descending
+                </label>
+            </div>
+        </div>
+        
+    
+        <!-- Apply Filters Button -->
+        <div class="filter-item col-2">
+            <button id="apply-filters" type="submit">Apply Filters</button>
+        </div>
+    </form>
+
+    <div class="filter-item d-flex justify-content-center mt-2">
+        <a href="/"  class="btn btn-primary" style="background-color: #3f78c9;">Back</a>
+    </div>
+    
+
+    <div class="row">
+        {% for i in range(recommendations['hospital Id'] | length) %}
+            <div class="card m-2 p-3 hover" style="width: 400px;">
+                <a href="https://www.google.com/maps?q={{recommendations['latitude'][i]|string + ',' + recommendations['longitude'][i]|string}}" target="_blank" class="hospital-name font-weight-bold">{{recommendations['facility_name'][i]}}</a>
+                <div class="hospital-info">
+                   <strong> Services </strong> : {{recommendations['services'][i]}}
+                </div>
+                <div class="hospital-info">
+                    <i class="fa-solid fa-phone"></i> {{recommendations['phone_number'][i]}}</i>
+                </div>
+                <div class="hospital-info">
+                    {% for j in range(5) %}
+                        {% if j < recommendations['rating'][i] %}
+                            <i class="fas fa-star" style="color: #3f78c9;"></i>
+                        {% else %}
+                            <i class="far fa-star" style="color: #3f78c9;"></i>
+                        {% endif %}
+                    {% endfor %}
+
+                    <span><i class="fas fa-map-marker-alt"></i> {{recommendations['Subcounty'][i]}} </span>
+                </div>
+                <div class="hospital-info">
+                    <strong>Care System </strong>: {{recommendations['care_system'][i]}}
+                </div>
+                <div class="hospital-info">
+                    <strong>Payment Type </strong>: {{recommendations['mode of payment'][i]}}
+                </div>
+                <div class="hospital-info">
+                    <strong>Operating Hours </strong>: {{recommendations['operating_hours'][i]}}
+                </div>
+            </div>
+
+        {% endfor %}
+        
+    </div>
+    
+</div>
+
+
+{% endblock %}
