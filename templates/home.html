@@ -7,7 +7,6 @@
         <div class="card-header sticky-top">
             <div class="d-flex align-center justify-content-center">
                 <h1 class="">Select services</h1>
-                <button class="btn btn-primary" style="margin-left: 30px; background-color: #4659d2 !important;" onclick="getRecommendation()">Go</button>
             </div>
             <div class="spinner" id="spinner">
                 <div class="dot1"></div>
@@ -15,23 +14,172 @@
             </div>
             <div class="selected-services mt-3 mb-3 d-flex flex-wrap d-none"></div>
         </div>
-        <div class="row">
-            {% for service in services %}
-            <div class="service-container" onclick="selectService(this)">
-                <div class="service-img">
-                    <img src="{{ url_for('static', filename='images/' + service +'.png') }}" alt="Dental Care">
-                    <div class="service-description">
-                        {{services_dict[service]['desc']}}
-                    </div>
-                </div>
-                <div class="service-title">
-                    <h2>{{ service }}</h2>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        
     </div>
+    <div class="fab-container">
+      <button class="btn btn-primary fab" onclick="getRecommendation()">Go</button>
+    </div>
+
+    {% for i in range(services | count) %}
+      {% if i < 5 %}
+        {% if i == 0 %}
+          <ul class="honeycomb">
+        {% endif %}
+        <li class="honeycomb-cell" onclick="selectService(this)">
+          <div class="info-icon" onclick="flipCard(event, this)">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="image-container">
+                <img class="img-fluid" src="{{url_for('static', filename='images/dental-care.png')}}">
+              </div>
+              <div class="honeycomb-cell__title">{{services[i]}}</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="description">
+                {{services_dict[services[i]]['desc']}} <!-- This will be the description to show on flip -->
+              </div>
+            </div>
+          </div>
+        </li>
+        {% if i == 4 %}
+          </ul>
+        {% endif %}
+
+      {% elif i >= 5 and i < 9 %}
+        {% if i == 5 %}
+          <ul class="honeycomb">
+        {% endif %}
+        <li class="honeycomb-cell" onclick="selectService(this)">
+          <div class="info-icon" onclick="flipCard(event, this)">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="image-container">
+                <img class="img-fluid" src="{{url_for('static', filename='images/dental-care.png')}}">
+              </div>
+              <div class="honeycomb-cell__title">{{services[i]}}</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="description">
+                {{services_dict[services[i]]['desc']}} <!-- This will be the description to show on flip -->
+              </div>
+            </div>
+          </div>
+        </li>
+        
+        
+        {% if i == 8 %}
+          </ul>
+        {% endif %} 
+      
+      {% elif i >= 9 and i <= 13 %}
+        {% if i == 9 %}
+          <ul class="honeycomb">
+        {% endif %}
+        <li class="honeycomb-cell" onclick="selectService(this)">
+          <div class="info-icon" onclick="flipCard(event, this)">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="image-container">
+                <img class="img-fluid" src="{{url_for('static', filename='images/dental-care.png')}}">
+              </div>
+              <div class="honeycomb-cell__title">{{services[i]}}</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="description">
+                {{services_dict[services[i]]['desc']}} <!-- This will be the description to show on flip -->
+              </div>
+            </div>
+          </div>
+        </li>
+        {% if i == 13 %}
+          </ul>
+        {% endif %}
+      
+      {% elif i >= 14 and i <= 17 %}
+        {% if i == 14 %}
+          <ul class="honeycomb">
+        {% endif %}
+        <li class="honeycomb-cell" onclick="selectService(this)">
+          <div class="info-icon" onclick="flipCard(event, this)">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="image-container">
+                <img class="img-fluid" src="{{url_for('static', filename='images/dental-care.png')}}">
+              </div>
+              <div class="honeycomb-cell__title">{{services[i]}}</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="description">
+                {{services_dict[services[i]]['desc']}} <!-- This will be the description to show on flip -->
+              </div>
+            </div>
+          </div>
+        </li>
+        {% if i == 17 %}
+          </ul>
+        {% endif %}
+
+      {% elif i >= 18 and i <= 22 %}
+        {% if i == 18 %}
+          <ul class="honeycomb">
+        {% endif %}
+        <li class="honeycomb-cell" onclick="selectService(this)">
+          <div class="info-icon" onclick="flipCard(event, this)">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="image-container">
+                <img class="img-fluid" src="{{url_for('static', filename='images/dental-care.png')}}">
+              </div>
+              <div class="honeycomb-cell__title">{{services[i]}}</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="description">
+                {{services_dict[services[i]]['desc']}} <!-- This will be the description to show on flip -->
+              </div>
+            </div>
+          </div>
+        </li>
+        {% if i == 22 %}
+          </ul>
+        {% endif %} 
+        
+      {% else %}
+      {% if i == 23 %}
+          <ul class="honeycomb">
+        {% endif %}
+        <li class="honeycomb-cell" onclick="selectService(this)">
+          <div class="info-icon" onclick="flipCard(event, this)">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="image-container">
+                <img class="img-fluid" src="{{url_for('static', filename='images/dental-care.png')}}">
+              </div>
+              <div class="honeycomb-cell__title">{{services[i]}}</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="description">
+                {{services_dict[services[i]]['desc']}} <!-- This will be the description to show on flip -->
+              </div>
+            </div>
+          </div>
+        </li>
+        {% if i == 26 %}
+          </ul>
+        {% endif %} 
+      {% endif %}
+      
+    {% endfor %}
 
     <!-- Modal -->
     <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">

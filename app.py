@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import joblib
 from utils.recommendations import get_recommendations
-import json
 from utils.format_date import format_date
 
 app = Flask(__name__)
@@ -30,6 +29,7 @@ def home():
     data = pd.read_excel("data/Kampala & Wakiso.xlsx")
     services_dict = joblib.load("./data/services_dict.pkl")
     services = data['cleaned services'].values
+    print(services_dict)
     services_set = extract_elements(services, True)
 
     return render_template('home.html', services=services_set, services_dict=services_dict)
@@ -55,7 +55,6 @@ def extract_dict(df : pd.DataFrame) -> dict:
 
 
 @app.route('/get_recommendations', methods=['POST'])
-
 def get_recommendation():
     if request.method == 'POST':
         data = request.get_json()
@@ -132,4 +131,4 @@ def settings():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=10000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

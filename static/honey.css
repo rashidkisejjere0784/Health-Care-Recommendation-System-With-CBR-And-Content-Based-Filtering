@@ -1,0 +1,278 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: #3ea0eb;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.honeycomb {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  padding: 0;
+  transform: translateY(68.75px);
+  perspective: 1000px;
+}
+
+.info-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 20px; /* Adjust the size of the icon */
+  color: #333; /* Color of the icon */
+}
+
+.info-icon i {
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.info-icon i:hover {
+  color: #007bff; /* Change color on hover */
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.honeycomb-cell.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+  background-color: transparent; /* Customize as needed */
+}
+
+.flip-card-back {
+  background-color: #f8f9fa; /* Customize as needed */
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.info-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  z-index: 10; /* Ensure it stays on top */
+}
+
+.info-icon i:hover {
+  color: #007bff;
+}
+
+.fab-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000; /* Ensure the button is above other elements */
+}
+
+.fab {
+  background-color: #008080 !important;
+  border-color: #008080;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+  font-size: 2.1em;
+}
+
+.fab:hover {
+  background-color: #3548b5 !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+
+.honeycomb-cell {
+  flex: 0 1 250px;
+  max-width: 390px;
+  height: 150px;
+  margin: 60.75px 10.5px 18px;
+  position: relative;
+  text-align: center;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.honeycomb-cell__title {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: center;
+  text-transform: uppercase;
+  bottom: 0;
+  color: black;
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.honeycomb-cell__title > small {
+  font-weight: 300;
+  margin-top: 0.25em;
+}
+
+.honeycomb-cell__image {
+  width: 50%;
+  width: fit-content;
+}
+
+.honeycomb-cell::before, .honeycomb-cell::after {
+  content: '';
+  top: -50%;
+  left: 0;
+  width: 100%;
+  height: 200%;
+  display: block;
+  position: absolute;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  z-index: -1;
+}
+
+.honeycomb-cell::before {
+  background: #fff;
+  transform: scale(1.055);
+}
+
+.honeycomb-cell::after {
+  background: #3ea0eb;
+  opacity: 0.5;
+  transition: opacity 350ms;
+}
+
+
+.honeycomb-cell:hover::before {
+  background: #72f88e;
+}
+
+.honeycomb-cell:hover::after {
+  opacity: 0;
+}
+
+.honeycomb-cell.selected::before {
+  background: #f88e3e; /* New background color when selected */
+}
+
+.honeycomb-cell.selected::after {
+  opacity: 0; /* Keep this if you want to hide the overlay */
+}
+
+
+.honeycomb__placeholder {
+  display: none;
+  opacity: 0;
+  width: 250px;
+  margin: 0 12.5px;
+}
+
+.image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.img-fluid {
+  max-width: 40%;
+  height: auto;
+  display: block;
+}
+
+
+/* Mobile Responsive Design */
+@media (max-width: 1400px) {
+
+  .honeycomb-cell {
+    flex: 0 1 250px;
+    max-width: 200px;
+    height: 100px;
+    margin: 80.75px 10.5px 20px;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .honeycomb-cell__title {
+    font-size: 0.5em; /* Reduce font size for smaller screens */
+    margin-top: 10px;
+  }
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 900px) {
+  .honeycomb {
+    grid-template-columns: repeat(3, 1fr); /* 3 cells per row */
+    gap: 10px; /* Adjust spacing between cells */
+  }
+
+  .honeycomb-cell {
+    flex: 0 1 250px;
+    max-width: 130px;
+    height: 60px;
+    margin: 40.75px 4.5px 10px;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .honeycomb__placeholder {
+    width: 10;
+    margin: 0 calc(10 * 0.1);
+  }
+
+  .honeycomb-cell__title {
+    font-size: 0.5em; /* Reduce font size for smaller screens */
+    margin-top: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .honeycomb-cell {
+    flex: 0 1 250px;
+    max-width: 85px;
+    height: 45px;
+    margin: 30.75px 2.5px 8px;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .honeycomb__placeholder {
+    width: 30vw;
+    margin: 0 calc(30vw * 0.05);
+  }
+
+  .honeycomb-cell__title {
+    font-size: 0.4em; /* Further reduce font size for even smaller screens */
+    margin-top: 3px;
+  }
+}
