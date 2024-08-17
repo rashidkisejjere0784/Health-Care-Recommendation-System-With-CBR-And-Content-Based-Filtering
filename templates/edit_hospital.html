@@ -11,70 +11,208 @@
         </button>
     </div>
     {% else %}
-    <h2>Edit Hospital</h2>
+    <div class="card shadow-lg p-4 border-0 rounded-lg">
+        <h2 class="text-center mb-4 text-primary font-weight-bold">Edit Hospital Details</h2>
         <form action="{{ url_for('add_hospital') }}" method="post" class="needs-validation" novalidate>
-            <div class="card" style="padding: 10px !important;">
-                <input type="number" hidden name="id" value="{{ hospital['Hospital Id'] }}">
-            
-            <div class="form-group">
-                <label for="hospitalName">Hospital Name <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="hospitalName" value="{{ hospital['Hospital Name'] }}" required>
+            <div class="form-row">
+                <input type="text" name="hospital Id" id="" class="d-none" value="{{hospital['hospital Id']}}">
+                <div class="form-group col-md-6">
+                    <label for="hospitalName">Hospital Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control rounded-pill" name="hospitalName" value="{{ hospital['facility_name'] }}" required>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="rating">Rating</label>
+                    <input type="number" class="form-control rounded-pill" name="rating" value="{{ hospital['rating'] }}" step="0.1" min="0" max="5">
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="rating">Rating</label>
-                <input type="number" class="form-control" name="rating" value="{{ hospital['rating'] }}">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="careSystem">Care System <span class="text-danger">*</span></label>
+                    <select class="form-control custom-select rounded-pill" name="care system">
+                        <option value="Public" {% if hospital["care_system"] == "Public" %} selected {% endif %}>Public</option>
+                        <option value="Private" {% if hospital["care_system"] == "Private" %} selected {% endif %}>Private</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="services">Services <span class="text-danger">*</span></label>
+                    <select id="service" name="services" class="selectpicker form-control" multiple data-live-search="true" data-selected-text-format="count > 3" title="Choose services">
+                        {% for service in services %}
+                            <option value="{{ service }}" {% if service | string in hospital['cleaned services'] | string %} selected {% endif %}>{{ service }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="btn btn-secondary mt-2" data-toggle="modal" data-target="#addServiceModal">Add A Service</p>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="careSystem">Care System <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="careSystem"  value="{{ hospital['Care system'] }}" required>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="payment">Payment Method <span class="text-danger">*</span></label>
+                    <select class="form-control custom-select rounded-pill" name="payment">
+                        <option value="cash" {% if hospital["mode of payment"] == "cash" %} selected {% endif %}>Cash</option>
+                        <option value="insuarance" {% if hospital["mode of payment"] == "insuarance" %} selected {% endif %}>Insuarance</option>
+                        <option value="no payment" {% if hospital["mode of payment"] == "no payment" %} selected {% endif %}>No Payment</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="location">Location <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control rounded-pill" name="location" value="{{ hospital['Subcounty'] }}" required>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="services">Services <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="services" value="{{ hospital['Services'] }}" required>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="latitude">Latitude  <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control rounded-pill" id="latitude" name="latitude" value="{{ hospital['latitude'] }}">
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="longitude">Longitude  <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control rounded-pill" id="longitude" name="longitude" value="{{ hospital['longitude'] }}">
+                </div>
             </div>
+            <button type="button" id="getloc" class="btn btn-secondary mb-2" onclick="getCurrentUserCordintate()">Get your current coordinates</button>
 
             <div class="form-group">
-                <label for="location">Location <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="location"  value="{{ hospital['Location'] }}" required>
+                <label for="operatingTime">Operating Hours, Monday - Sunday <span class="text-danger">*</span></label>
+                <input type="text" class="form-control rounded-pill" id="operatingTime" name="operatingTime" value="{{ hospital['operating_hours'] }}" readonly required>
+                <button type="button" class="btn btn-secondary mt-2" data-toggle="modal" data-target="#operatingHoursModal">Set Operating Hours</button>
             </div>
 
-            <div class="form-group">
-                <label for="payment">Payment</label>
-                <input type="text" class="form-control" name="payment" value="{{ hospital['Payment'] }}">
-            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="phone">Phone</label>
+                    <input type="text" class="form-control rounded-pill" name="phone" value="{{ hospital['phone_number'] }}">
+                </div>
 
-            <div class="form-group">
-                <label for="coordinates">Coordinates</label>
-                <input type="text" class="form-control" name="coordinates"  value="{{ hospital['Cordinates'] }}">
+                <div class="form-group col-md-6">
+                    <label for="website">Website</label>
+                    <input type="text" class="form-control rounded-pill" name="website" value="{{ hospital['website'] }}">
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="operatingTime">Operating Time <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="operatingTime" value="{{ hospital['Operating Time'] }}" required>
+            <div class="row">
+                <div class="col-6">
+                    <a href="{{url_for('show_data')}}" class="btn btn-danger">Cancel</a>
+                
+                    <button type="submit" class="btn btn-primary">Update Hospital</button>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="type">Type</label>
-                <input type="text" class="form-control" name="type"value="{{ hospital['Type'] }}">
-            </div>
-
-            <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="text" class="form-control" name="phone"  value="{{ hospital['phone'] }}">
-            </div>
-
-            <div class="form-group">
-                <label for="website">Website</label>
-                <input type="text" class="form-control" name="website" value="{{ hospital['website'] }}">
-            </div>
-
-            </div>
-            
-            <button type="submit" class="btn btn-primary mt-3">Update</button>
         </form>
+
+        <!-- Modal for Adding a New Service -->
+<div class="modal fade" id="addServiceModal" tabindex="-1" aria-labelledby="addServiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addServiceModalLabel">Add New Service</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="newServiceName">Service Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="newServiceName" placeholder="Enter service name" required>
+                </div>
+                <div class="form-group">
+                    <label for="newServiceDescription">Description</label>
+                    <textarea class="form-control" id="newServiceDescription" placeholder="Enter service description"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="addServiceBtn">Add Service</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Setting Operating Hours -->
+<div class="modal fade" id="operatingHoursModal" tabindex="-1" aria-labelledby="operatingHoursModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="operatingHoursModalLabel">Set Operating Hours</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Days and Time Selection -->
+                <div class="form-group">
+                    <label for="monday">Monday</label>
+                    <select class="form-control" id="monday">
+                        <option value="Open 24 hours" selected>Open 24 hours</option>
+                        <option value="Closed">Closed</option>
+                        <option value="8:00am to 5:00pm">8:00am to 5:00pm</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tuesday">Tuesday</label>
+                    <select class="form-control" id="tuesday">
+                        <option value="Open 24 hours" selected>Open 24 hours</option>
+                        <option value="Closed">Closed</option>
+                        <option value="8:00am to 5:00pm">8:00am to 5:00pm</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Wednesday">Wednesday</label>
+                    <select class="form-control" id="wednesday">
+                        <option value="Open 24 hours" selected>Open 24 hours</option>
+                        <option value="Closed">Closed</option>
+                        <option value="8:00am to 5:00pm">8:00am to 5:00pm</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Thursday">Thursday</label>
+                    <select class="form-control" id="thursday">
+                        <option value="Open 24 hours" selected>Open 24 hours</option>
+                        <option value="Closed">Closed</option>
+                        <option value="8:00am to 5:00pm">8:00am to 5:00pm</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Friday">Friday</label>
+                    <select class="form-control" id="friday">
+                        <option value="Open 24 hours" selected>Open 24 hours</option>
+                        <option value="Closed">Closed</option>
+                        <option value="8:00am to 5:00pm">8:00am to 5:00pm</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Saturday">Saturday</label>
+                    <select class="form-control" id="saturday">
+                        <option value="Open 24 hours" selected>Open 24 hours</option>
+                        <option value="Closed">Closed</option>
+                        <option value="8:00am to 5:00pm">8:00am to 5:00pm</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sunday">Sunday</label>
+                    <select class="form-control" id="sunday">
+                        <option value="Open 24 hours" selected>Open 24 hours</option>
+                        <option value="Closed">Closed</option>
+                        <option value="8:00am to 5:00pm">8:00am to 5:00pm</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveOperatingHoursBtn">Save Hours</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
     {% endif %}
 </div>
 

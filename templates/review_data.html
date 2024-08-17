@@ -13,6 +13,7 @@
     {% endif %}
     
     <h1 class="hospital-header inline-block">Review Data</h1>
+    <a href="{{url_for('show_data')}}" class="btn btn-primary">Back</a>
     
     <div style="max-width: 150%; overflow: scroll;">
         <table class="table table-striped overflow-scroll">
@@ -21,8 +22,8 @@
                     <th>Hospital Name</th>
                     <th>Rating</th>
                     <th>Care System</th>
-                    <th>Coordinates</th>
-                    <th>Type</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
                     <th>Services</th>
                     <th>Location</th>
                     <th>Payment</th>
@@ -35,18 +36,18 @@
             <tbody>
                 {% for i in range(hospitals | count) %}
                     <tr>
-                        <td>{{hospitals[i]["Hospital Name"]}}</td>
-                        <td>{{hospitals[i]['rating']}}</td>
-                        <td>{{hospitals[i]['Care system']}}</td>
-                        <td>{{hospitals[i]['Cordinates']}}</td>
-                        <td>{{hospitals[i]['Type']}}</td>
-                        <td>{{hospitals[i]['Services']}}</td>
-                        <td>{{hospitals[i]['Location']}}</td>
-                        <td>{{hospitals[i]['Payment']}}</td>
-                        <td>{{hospitals[i]['phone']}}</td>
-                        <td>{{hospitals[i]['website']}}</td>
+                        <td>{{hospitals.loc[i]["facility_name"]}}</td>
+                        <td>{{hospitals.loc[i]['rating']}}</td>
+                        <td>{{hospitals.loc[i]['care_system']}}</td>
+                        <td>{{hospitals.loc[i]['longitude']}}</td>
+                        <td>{{hospitals.loc[i]['longitude']}}</td>
+                        <td>{{hospitals.loc[i]['cleaned services']}}</td>
+                        <td>{{hospitals.loc[i]['Subcounty']}}</td>
+                        <td>{{hospitals.loc[i]['mode of payment']}}</td>
+                        <td>{{hospitals.loc[i]['phone_number']}}</td>
+                        <td>{{hospitals.loc[i]['website']}}</td>
                         <td>
-                            {{hospitals[i]['Hospital Id']}}
+                            {{hospitals.loc[i]['hospital Id']}}
                         </td>
                         <td>
                             <form action="{{ url_for('review_data') }}" method="post">
@@ -61,6 +62,26 @@
         </table>
     </div>
            
+    <div class="d-flex justify-content-center mt-5">
+        <form method="post" action="{{url_for('add_image')}}" enctype="multipart/form-data" class="col-6">
+            <h3 class="text-center">Add Service Image</h3>
+            <div class="form-group">
+                <label for="newServiceName">Service Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="service_name" placeholder="Enter service name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Service Description <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="description" placeholder="Enter service description" required>
+            </div>
+            <div>
+                <label for="formFileLg" class="form-label">Upload Service Image</label>
+                <input class="form-control form-control-lg" name="file" id="formFileLg" type="file" accept="image/*">
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-2">Submit</button>
+        </form>
+    </div>
+    
 </div>
 
 {% endblock %}

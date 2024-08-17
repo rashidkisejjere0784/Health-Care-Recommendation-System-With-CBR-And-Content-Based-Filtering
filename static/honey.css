@@ -35,7 +35,7 @@ body {
 }
 
 .info-icon i:hover {
-  color: #007bff; /* Change color on hover */
+  color: #007bff; 
 }
 
 .flip-card-inner {
@@ -84,6 +84,29 @@ body {
 
 .info-icon i:hover {
   color: #007bff;
+}
+
+.honeycomb-cell {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.honeycomb-cell.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+@keyframes flyIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .fab-container {
