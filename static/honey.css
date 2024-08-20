@@ -256,6 +256,12 @@ body {
     gap: 10px; /* Adjust spacing between cells */
   }
 
+  .fab {
+    font-size: 1.2em;
+    width: 80px;
+    height: 80px;
+  }
+
   .honeycomb-cell {
     flex: 0 1 250px;
     max-width: 130px;

@@ -8,9 +8,6 @@ def get_recommendations(services : list, latitude : float, longitude : float, ap
     hospital_data = pd.read_excel("./Data/Kampala & Wakiso.xlsx")
     service_matrix, service_bow = generate_Factorized_Matrix(hospital_data, 'cleaned services', is_service=True)
     latitude_longitude = np.array([[latitude, longitude]])
-    print(service_bow)
-    print(service_matrix)
-    print(services)
 
     Full_data = np.concatenate([service_matrix, np.array(hospital_data['latitude'].values).reshape(-1, 1), np.array(hospital_data['longitude'].values).reshape(-1, 1)], axis =1)
 
