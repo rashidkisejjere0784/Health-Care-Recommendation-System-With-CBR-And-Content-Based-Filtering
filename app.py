@@ -378,6 +378,8 @@ def review_data():
                 hospital_data.to_excel(DATA_PATH, index=False)
 
             else:
+                hospital['hospital Id'] = int(hospital['hospital Id'])
+                print(hospital_data[hospital_data['hospital Id'] == hospital['hospital Id']])
                 hospital_data[hospital_data['hospital Id'] == hospital['hospital Id']] = hospital
                 hospital_data.to_excel(DATA_PATH, index=False)
             

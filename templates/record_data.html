@@ -38,7 +38,7 @@
 
                 <div class="form-group col-md-6">
                     <label for="services">Services <span class="text-danger">*</span></label>
-                    <select id="service" name="services[]" class="selectpicker form-control" multiple data-live-search="true" data-selected-text-format="count > 3" title="Choose services">
+                    <select id="service" name="services" class="selectpicker form-control" multiple data-live-search="true" data-selected-text-format="count > 3" title="Choose services">
                         {% for service in services %}
                             <option value="{{ service }}">{{ service }}</option>
                         {% endfor %}
