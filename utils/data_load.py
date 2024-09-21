@@ -15,7 +15,7 @@ def get_data(start_index : int, end_index : int) -> list:
 def get_facility(id : int):
     print(id)
     hospital_data = pd.read_excel("data/Kampala & Wakiso.xlsx")
-    return hospital_data.iloc[id + 1]
+    return hospital_data.iloc[id]
 
 def load_data():
     data = pd.read_excel("data/Kampala & Wakiso.xlsx")

@@ -3,73 +3,123 @@
 {% block content %}
 
 <div class="container-fluid m-2">
-    <div class="card">
-      <div class="card-header fixed-top mt-5">
-          <div class="d-flex align-center justify-content-center">
-              <h1 class="">Select services</h1>
-          </div>
-          <div class="spinner" id="spinner">
-              <div class="dot1"></div>
-              <div class="dot2"></div>
-          </div>
-          <div class="selected-services mt-3 mb-3 d-flex flex-wrap d-none"></div>
-      </div>
-    </div>
-    <div class="fab-container">
-      <button class="btn btn-primary fab" onclick="getRecommendation()">Go</button>
-    </div>
+    <div class="row">
+        <!-- Left Side Panel for Feature Selection -->
+        <div class="col-md-3 side-panel">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Filter Options</h5>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="approach">Recommendation Algorithm</label>
+                    <select class="form-control" id="approach">
+                        <option selected disabled value="cbf">Content Based Filtering</option>
+                        <option value="cbr">Case Based Reasoning</option>
+                    </select>
+                </div>
 
-    {% for i in range(0, services | count, 9) %}
-    <ul class="honeycomb">
-      {% for j in range(i, i + 9) %}
-        {% if j < services | count %}
-          <li class="honeycomb-cell" onclick="selectService(this)">
-            <div class="info-icon" onclick="flipCard(event, this)">
-              <i class="fas fa-info-circle"></i>
-            </div>
-            <div class="flip-card-inner">
-              <div class="flip-card-front">
-                <div class="image-container">
-                  <img class="img-fluid" src="{{url_for('static', filename='images/' + services[j] + '.png')}}">
+                    <!-- Location Selection -->
+                    <div class="form-group">
+                        <input type="text" name="lat" id="lat" class="d-none">
+                        <input type="text" name="lng" id="lng" class="d-none">
+                        <label for="locationSelect">Location</label>
+                        <input type="text" class="form-control" name="location-search" id="location-search">
+                        <p class="mt-2 btn btn-primary" id="search-loc" onclick="getCoordinates()">search location</p>
+                    </div>
+
+                    <!-- Care System Selection -->
+                    <div class="form-group">
+                        <label for="careSystemSelect">Care System</label>
+                        <select class="form-control" id="careSystemSelect">
+                            <option selected disabled>Any</option>
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
+                        </select>
+                    </div>
+
+                    <!-- Payment Mode Selection -->
+                    <div class="form-group">
+                        <label for="paymentModeSelect">Mode of Payment</label>
+                        <select class="form-control" id="paymentModeSelect">
+                            <option selected disabled>Any</option>
+                            <option value="cash">Cash</option>
+                            <option value="cash">No Payment</option>
+                            <option value="insurance">Insurance</option>
+                        </select>
+                    </div>
+
+                    <div id="date-selection">
+                      <label>Select Day</label>
+                      <div class="m2">
+                        <select id="date" class="selectpicker" multiple>
+                          <option>Any</option>
+                          <option>Monday</option>
+                          <option>Tuesday</option>
+                          <option>Wednesday</option>
+                          <option>Thursday</option>
+                          <option>Friday</option>
+                          <option>Saturday</option>
+                          <option>Sunday</option>
+                      </select>
+                      </div>
+                      <br>
+                  </div>
                 </div>
-                <div class="honeycomb-cell__title">{{services[j]}}</div>
-              </div>
-              <div class="flip-card-back">
-                <div class="description">
-                  {{services_dict[services[j]]['desc']}}
-                </div>
-              </div>
             </div>
-          </li>
-          {% if j == i + 4 or j == i + 8 %}
-            </ul>
-            {% if j < i + 8 and j < services | count - 1 %}
+        </div>
+
+        <!-- Main Content for Service Selection -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header fixed-top mt-5">
+                    <div class="d-flex align-center justify-content-center">
+                        <h1 class="">Select services</h1>
+                    </div>
+                    <div class="spinner" id="spinner">
+                        <div class="dot1"></div>
+                        <div class="dot2"></div>
+                    </div>
+                    <div class="selected-services mt-3 mb-3 d-flex flex-wrap d-none"></div>
+                </div>
+            </div>
+            <div class="fab-container">
+                <button class="btn btn-primary fab" onclick="getRecommendation()">Go</button>
+            </div>
+
+            {% for i in range(0, services | count, 7) %}
               <ul class="honeycomb">
-            {% endif %}
-          {% endif %}
-        {% endif %}
-      {% endfor %}
-    </ul>
-  {% endfor %}
-  
+                {% for j in range(i, i + 7) %}
+                  {% if j < services | count %}
+                    <li class="honeycomb-cell" onclick="selectService(this)">
+                      <div class="info-icon" onclick="flipCard(event, this)">
+                        <i class="fas fa-info-circle"></i>
+                      </div>
+                      <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                          <div class="image-container">
+                            <img class="img-fluid" src="{{url_for('static', filename='images/' + services[j] + '.png')}}">
+                          </div>
+                          <div class="honeycomb-cell__title">{{services[j]}}</div>
+                        </div>
+                        <div class="flip-card-back">
+                          <div class="description">
+                            {{services_dict[services[j]]['desc']}}
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    {% if j == i + 3 or j == i + 6 %}
+                      </ul>
+                      {% if j < i + 6 and j < services | count - 1 %}
+                        <ul class="honeycomb">
+                      {% endif %}
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            {% endfor %}
 
-    <!-- Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="successModalLabel">Recommended Hospitals</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="hospitalDataContainer">
-                    Selected values have been successfully sent.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
         </div>
     </div>
 </div>

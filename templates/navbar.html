@@ -134,6 +134,13 @@ z-index: 1000; /* Puts the element on top of other elements */
     cursor: pointer;
 }
 
+.side-panel {
+    position: sticky;
+    top: 120px;
+    height: 100vh; /* Full height */
+    overflow-y: auto; /* To make the content scrollable */
+}
+
 #apply-filters:hover {
     background-color: #4659d2;
 }
@@ -354,6 +361,35 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
     }
 
+    function getCoordinates(){
+        latitude = document.getElementById('lat');
+        longitude = document.getElementById('lng');
+        document.getElementById('search-loc').innerText = "Searching...";
+
+        address = document.getElementById('location-search').value;
+
+        fetch('/get_cordinates', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                        'address': address,
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    latitude.value = data['latitude']
+                    longitude.value = data['longitude']
+                    document.getElementById('search-loc').innerText = 'got the cordinates'
+                })
+                .catch(error => {
+                    console.error('Error:', error)
+                    document.getElementById('search-loc').innerText = 'Error getting cordinates'                    
+                });
+    }
+
     function getRecommendation(){
         const selectedServices = Array.from(document.getElementById('selected-services').children).map(li => li.innerText);
         if (navigator.geolocation) {
@@ -362,8 +398,27 @@ document.addEventListener('DOMContentLoaded', function () {
             navigator.geolocation.getCurrentPosition(
                 function(position) {
                 // Get the latitude and longitude coordinates
-                var latitude = position.coords.latitude;
-                var longitude = position.coords.longitude;
+                var latitude = document.getElementById('lat');
+                var longitude = document.getElementById('lng');
+
+                if (latitude.value && longitude.value) {
+                    latitude = latitude.value;
+                    longitude = longitude.value;
+                }
+                else{
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
+                }
+
+                alert(latitude + ' ' + longitude)
+
+                //Get the the rest of the filter fields
+                const careSystem = document.getElementById('careSystemSelect').value;
+                const paymentMode = document.getElementById('paymentModeSelect').value;
+                const approach = document.getElementById('approach').value;
+                const date = document.getElementById('date');
+                const selectedOptions = date.selectedOptions;
+                const values = Array.from(selectedOptions).map(option => option.value);
 
                 fetch('/get_recommendations', {
                 method: 'POST',
@@ -374,21 +429,24 @@ document.addEventListener('DOMContentLoaded', function () {
                         'services': selectedServices,
                         'latitude': latitude,
                         'longitude': longitude,
+                        'careSystem': careSystem,
+                        'paymentMode': paymentMode,
+                        'date': values,
+                        'approach': approach
                         })
                 })
                 .then(response => response.json())
                 .then(data => {
                     console.log(data)
+                    alert(data)
                     if (data['response'] == true){
                         window.location.href = '{{url_for("view")}}';
                     }
-                    // displayData(data);
-                    // $('#successModal').modal('show');
-                    // document.getElementById('spinner').style.display = 'none';
                 })
                 .catch(error => {
-                    window.location.href = '{{url_for("view")}}';
                     console.error('Error:', error)
+                    alert('anha')
+                    window.location.href = '{{url_for("view")}}';
                 });
 
 

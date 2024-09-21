@@ -67,7 +67,7 @@
             <div class="card m-2 p-3 hover" style="width: 400px;">
                 <a href="https://www.google.com/maps?q={{recommendations['latitude'][i]|string + ',' + recommendations['longitude'][i]|string}}" target="_blank" class="hospital-name font-weight-bold">{{recommendations['facility_name'][i]}}</a>
                 <div class="hospital-info">
-                   <strong> Services </strong> : {{recommendations['services'][i]}}
+                   <strong> Services </strong> : {{recommendations['cleaned services'][i]}}
                 </div>
                 <div class="hospital-info">
                     <i class="fa-solid fa-phone"></i> {{recommendations['phone_number'][i]}}</i>

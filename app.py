@@ -8,16 +8,16 @@ from flask_bcrypt import Bcrypt
 import os
 from dotenv import load_dotenv
 from flask_mail import Mail
-from flask_jwt_extended import JWTManager, create_access_token
 from db import db
 from models.userModel import User
 from datetime import timedelta
 from utils.data_load import get_data, get_facility, load_temp_data, save_new_service_to_dict
 from utils.auth import *
-import jwt as JWT
+from geopy.geocoders import Photon
 
 
 app = Flask(__name__)
+geolocator = Photon(user_agent="measurements")
 load_dotenv()
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
@@ -35,11 +35,9 @@ ADMIN_ID = os.environ.get('ADMIN_ID')
 DATA_PATH = os.environ.get('DATA_PATH')
 TEMP_DATA = os.environ.get('TEMP_DATA')
 HOST = os.environ.get('HOST')
-GMAPS_API_KEY = os.environ.get('GMAPS_API_KEY')
 
 db.init_app(app)
 mail = Mail(app)
-jwt = JWTManager(app)
 bcrpy = Bcrypt(app)
 
 
@@ -71,6 +69,7 @@ def home():
 def extract_dict(df : pd.DataFrame) -> dict:
     hospital_ids = df['hospital Id'].values.tolist()
     hospital_names = df['facility_name'].values.tolist()
+    print(df.columns)
     Services = df['cleaned services'].values.tolist()
     Subcounty = df['Subcounty'].values.tolist()
     care_system = df['care_system'].values.tolist()
@@ -82,7 +81,7 @@ def extract_dict(df : pd.DataFrame) -> dict:
     contact = df['phone_number'].values.tolist()
 
     data_json =  {'hospital Id' : hospital_ids, 'facility_name' : hospital_names, 'mode of payment' : Payment,
-                        'services' : Services, 'Subcounty' : Subcounty, 'rating' : rating, 'care_system' : care_system,
+                        'cleaned services' : Services, 'Subcounty' : Subcounty, 'rating' : rating, 'care_system' : care_system,
                         'operating_hours' : Operation_Time, 'latitude' : Latitude, 'longitude' : Longitude, 'phone_number' : contact}
     
     return data_json
@@ -96,7 +95,7 @@ def login():
 
         user = User.query.filter_by(email = email).first()
         if user and bcrpy.check_password_hash(user.password, password):
-            token = create_access_token(identity=str(user.id))
+            token = create_access_token(str(user.id))
             session['user_token'] = token
 
             hospitals, data_len = get_data(start_index=0, end_index=20)
@@ -112,7 +111,7 @@ def show_data():
     if 'user_token' not in session:
         return redirect(url_for('login'))
     
-    is_auth, is_admin = is_authenticated(User, session, JWT)
+    is_auth, is_admin = is_authenticated(User, session)
     print(is_admin)
     if not is_auth:
         return redirect(url_for('login'))
@@ -147,7 +146,7 @@ def register():
                 return render_template('register.html', error = "Email already exists")
         
             elif user.status == 0:
-                token = create_access_token(identity=str(user.id), expires_delta=expires)
+                token = create_access_token(str(user.id))
                 send_email(user.username, user.email, user, expires, mail=mail, token=token)
                 return render_template('register.html', error = "User isn't verified yet, check your email")
 
@@ -158,7 +157,7 @@ def register():
             db.session.add(user)
             db.session.commit()
 
-            token = create_access_token(identity=str(user.id), expires_delta=expires)
+            token = create_access_token(str(user.id))
             send_email(username, email, user, expires,mail=mail, token=token)
 
             return render_template('register.html', message = "Registration successful, Check your email to verify your registration")
@@ -178,8 +177,13 @@ def get_recommendation():
         services = data.get('services', [])
         latitude = data.get('latitude', 0.0)
         longitude = data.get('longitude', 0.0)
+        date = data.get('date', [])
+        care_system = data.get('careSystem', '')
+        payment = data.get('paymentMode', '')
+        approach = data.get('approach')
 
-        recommendation = get_recommendations(services, latitude, longitude)
+        recommendation = get_recommendations(services_str=",".join(services), 
+                                         latitude=latitude, longitude=longitude, payment_str=payment, op_day_str=",".join(date), care_system=care_system, approach=approach)
         session['recommendations'] = extract_dict(recommendation)
 
         return jsonify({"response" : True})
@@ -250,7 +254,7 @@ def settings():
 def verify_token():
     token = request.args.get('token')
     try:
-        decoded_jwt = JWT.decode(token, JWT_SECRET_KEY, ['HS256'])
+        decoded_jwt = decode_token(token)
         user_id = int(decoded_jwt['sub'])
 
         user = User.query.filter_by(id=user_id).first()
@@ -269,10 +273,11 @@ def verify_token():
 
 @app.route('/edit_hospital', methods=['POST', 'GET'])
 def edit_hospital():
-    if not is_authenticated(User=User, session=session,JWT=JWT):
+    if not is_authenticated(User=User, session=session):
         return redirect(url_for('login'))
     
     hospital_id = int(request.form['hospital_id'])
+    print(hospital_id)
     hospital = get_facility(hospital_id)
 
     data = pd.read_excel("data/Kampala & Wakiso.xlsx")
@@ -287,7 +292,7 @@ def edit_hospital():
 
 @app.route('/add_hospital', methods=['POST'])
 def add_hospital():
-    auth = is_authenticated(User,session,JWT)
+    auth = is_authenticated(User,session)
     if not auth[0]:
         return render_template('show_data.html', authenticated = False, is_admin = auth[1])
     
@@ -334,7 +339,7 @@ def add_hospital():
 
 @app.route('/record_data', methods=['GET'])
 def record_data():
-    if not is_authenticated(User, session, JWT)[0]:
+    if not is_authenticated(User, session)[0]:
         return redirect(url_for('login'))
     
     data = pd.read_excel("data/Kampala & Wakiso.xlsx")
@@ -348,7 +353,7 @@ def record_data():
 
 @app.route('/review_data', methods=['GET', 'POST'])
 def review_data():
-    auth = is_authenticated(User, session, JWT)
+    auth = is_authenticated(User, session)
     if not auth[0]:
         return render_template('contribute.html')
     
@@ -401,7 +406,7 @@ def allowed_file(filename):
 
 @app.route('/add_image', methods=['POST'])
 def add_image():
-    auth = is_authenticated(User, session, JWT)
+    auth = is_authenticated(User, session)
     if not auth[0]:
         return redirect(url_for('login'))
     
@@ -425,7 +430,25 @@ def add_image():
 
     return render_template('upload.html')
 
+
+@app.route('/get_cordinates', methods=['POST'])
+def get_cordinates():
+    if request.method == 'POST':
+        data = request.get_json()
+        address = data['address']
+
+
+        location = geolocator.geocode(f"{address}, uganda")
+        latitude = location.latitude
+        longitude = location.longitude
+
+        return jsonify({
+            "latitude": latitude,
+            "longitude": longitude
+        })
+
+with app.app_context():
+    db.create_all()
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    
+    app.run(host="0.0.0.0", debug=True)
