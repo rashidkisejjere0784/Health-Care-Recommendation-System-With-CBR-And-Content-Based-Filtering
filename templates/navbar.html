@@ -437,14 +437,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     console.log(data)
-                    alert(data)
                     if (data['response'] == true){
                         window.location.href = '{{url_for("view")}}';
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error)
-                    alert('anha')
                     window.location.href = '{{url_for("view")}}';
                 });
 
